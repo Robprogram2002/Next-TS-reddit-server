@@ -12,9 +12,9 @@ import bcrypt from 'bcrypt';
 import { classToPlain, Exclude } from 'class-transformer';
 
 @Entity()
-export class User extends BaseEntity {
+class User extends BaseEntity {
   constructor(user: Partial<User>) {
-    //partial means that some fields can be nullable
+    // partial means that some fields can be nullable
     super();
     Object.assign(this, user);
   }
@@ -38,7 +38,7 @@ export class User extends BaseEntity {
 
   @Exclude()
   @Column()
-  @Length(6, 255, {
+  @Length(7, 255, {
     message: 'password most have a least 6 characters long',
     always: true,
   })
@@ -59,3 +59,5 @@ export class User extends BaseEntity {
     return classToPlain(this);
   }
 }
+
+export default User;

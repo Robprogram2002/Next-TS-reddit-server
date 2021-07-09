@@ -1,7 +1,7 @@
-import { Response, Request } from 'express';
-import HttpException from '../utils/Exception';
+import { Response } from 'express';
+import HttpException from './Exception';
 
-const errorHandler = (error: HttpException, req: Request, res: Response) => {
+const errorHandler = (error: HttpException, res: Response) => {
   const resObject = {
     status: error.status || 500,
     message: error.message || 'Something went wrong',

@@ -10,7 +10,7 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint", "plugin:import/typescript"],
+  "plugins": ["@typescript-eslint"],
   "rules": {
     "no-console": 1,
     "import/extensions": [
