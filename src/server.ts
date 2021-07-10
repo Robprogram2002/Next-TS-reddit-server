@@ -9,6 +9,8 @@ import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 
 import authRoutes from './routes/auth';
+import postRoutes from './routes/postRoutes';
+import subRoutes from './routes/subRoutes';
 import trim from './middlewares/trimParser';
 
 dotenv.config();
@@ -31,6 +33,8 @@ app.get('/test', (req, res) => {
 });
 
 app.use('/api/auth/', authRoutes);
+app.use('/api/posts/', postRoutes);
+app.use('/api/subs/', subRoutes);
 
 // app.use(errorHandler);
 

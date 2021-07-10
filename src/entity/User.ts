@@ -1,27 +1,17 @@
 import { IsEmail, Length } from 'class-validator';
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  BaseEntity,
-  Index,
-  CreateDateColumn,
-  BeforeInsert,
-} from 'typeorm';
+import { Entity, Column, Index, BeforeInsert, OneToMany } from 'typeorm';
 import bcrypt from 'bcrypt';
-import { classToPlain, Exclude } from 'class-transformer';
+import { Exclude } from 'class-transformer';
+import ShareEntity from './ShareEntity';
+import Post from './Post';
 
-@Entity()
-class User extends BaseEntity {
+@Entity('users')
+class User extends ShareEntity {
   constructor(user: Partial<User>) {
     // partial means that some fields can be nullable
     super();
     Object.assign(this, user);
   }
-
-  @Exclude()
-  @PrimaryGeneratedColumn()
-  id: number;
 
   @Index()
   @Length(3, 255, {
@@ -44,19 +34,12 @@ class User extends BaseEntity {
   })
   password: string;
 
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @CreateDateColumn()
-  updatedAt: Date;
+  @OneToMany(() => Post, (post) => post.user)
+  posts: Post[];
 
   @BeforeInsert()
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 6);
-  }
-
-  toJSON() {
-    return classToPlain(this);
   }
 }
 
