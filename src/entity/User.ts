@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import { Exclude } from 'class-transformer';
 import ShareEntity from './ShareEntity';
 import Post from './Post';
+import Vote from './Vote';
 
 @Entity('users')
 class User extends ShareEntity {
@@ -22,7 +23,7 @@ class User extends ShareEntity {
   username: string;
 
   @Index()
-  @IsEmail()
+  @IsEmail(undefined, { message: 'Must be a valid email address' })
   @Column({ unique: true })
   email: string;
 
@@ -36,6 +37,9 @@ class User extends ShareEntity {
 
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
+
+  @OneToMany(() => Vote, (vote) => vote.user)
+  votes: Vote[];
 
   @BeforeInsert()
   async hashPassword() {

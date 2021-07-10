@@ -7,6 +7,15 @@ import User from '../entity/User';
 import HttpException from '../utils/Exception';
 import errorHandler from '../utils/errorHandler';
 
+const mapErrors = (errors: Object[]) =>
+  errors.reduce((prev: any, err: any) => {
+    const [constraints] = Object.entries(err.constraints);
+    const [, value] = constraints;
+    // eslint-disable-next-line no-param-reassign
+    prev[err.property] = value;
+    return prev;
+  }, {});
+
 export const signUpHandler = async (req: Request, res: Response) => {
   const { email, password, username } = req.body;
   try {
@@ -28,13 +37,13 @@ export const signUpHandler = async (req: Request, res: Response) => {
     // validate data
     const errors = await validate(user);
     if (errors.length > 0) {
-      throw new HttpException(400, 'Bad input data', errors);
+      throw new HttpException(400, 'Bad input data', mapErrors(errors));
     }
 
     // save user
     await user.save();
 
-    res.status(200).json({ message: 'all good', user: user.toJSON() });
+    res.status(200).json({ user });
   } catch (error) {
     errorHandler(error, res);
   }
