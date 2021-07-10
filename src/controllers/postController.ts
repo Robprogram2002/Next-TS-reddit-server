@@ -26,24 +26,31 @@ export const createPost = async (req: Request, res: Response) => {
   }
 };
 
-export const deletePost = async (req: Request, res: Response) => {
-  const { title, body, sub } = req.body;
-
-  const { user } = res.locals;
-
-  if (title.trim() === '') {
-    return res.status(400).json({ title: 'Title must not be empty' });
-  }
-
+export const fetchRecentPosts = async (_: Request, res: Response) => {
   try {
-    // find sub
-    const subRecord = await Sub.findOneOrFail({ name: sub });
+    const posts = await Post.find({
+      order: {
+        createdAt: 'DESC',
+      },
+      take: 10,
+    });
 
-    const post = new Post({ title, body, user, sub: subRecord });
-    await post.save();
-
-    return res.json(post);
+    res.json(posts);
   } catch (err) {
-    return res.status(500).json({ error: 'Something went wrong' });
+    errorHandler(err, res);
+  }
+};
+
+export const fetchSiglePost = async (req: Request, res: Response) => {
+  const { identifier, slug } = req.params;
+  try {
+    const post = await Post.findOneOrFail(
+      { identifier, slug },
+      { relations: ['sub'] }
+    );
+
+    res.json({ post });
+  } catch (err) {
+    errorHandler(err, res);
   }
 };

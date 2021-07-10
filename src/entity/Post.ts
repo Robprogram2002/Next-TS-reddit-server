@@ -5,6 +5,7 @@ import {
   BeforeInsert,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 
 import { Length } from 'class-validator';
@@ -13,6 +14,7 @@ import User from './User';
 import slugify from '../utils/slugify';
 import makeId from '../utils/characterId';
 import Sub from './Sub';
+import Comment from './Comment';
 
 @Entity('posts')
 export default class Post extends ShareEntity {
@@ -48,6 +50,9 @@ export default class Post extends ShareEntity {
   @ManyToOne(() => Sub, (sub) => sub.posts)
   @JoinColumn({ name: 'subName', referencedColumnName: 'name' })
   sub: Sub;
+
+  @OneToMany(() => Comment, (comment) => comment.post)
+  comments: Comment[];
 
   @BeforeInsert()
   makeIdAndSlug() {

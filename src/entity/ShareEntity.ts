@@ -12,7 +12,7 @@ export default abstract class ShareEntity extends BaseEntity {
   id: string;
 
   @CreateDateColumn()
-  createAt: Date;
+  createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
